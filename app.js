@@ -12,67 +12,148 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-// Using npm install, we install all the dependencies
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
+//we will push to an empty array of new team as new members are dynamically created
+let newTeam = [];
 
-function promptUser() {
+
+function promptQuestion() {
+    return inquirer.prompt([
+        {
+            type: "list",
+            name: "teamMember",
+            message: "Who do you want to add to the team?",
+            choices: [
+                "Manager"
+                "Engineer",
+                "Intern",
+                "None"
+            ]
+        },
+    ]).then(answers => {
+        if (answers.teamMember === "Manager") {
+            return promptManager()
+        }
+        else if (answers.teamMember === "Engineer") {
+            return promptEngineer()
+        }
+        else if (answers.teamMember === "Intern") {
+            return promptIntern()
+        } else {
+            return
+        }
+    })
+}
+
+
+function promptManager() {
     return inquirer.prompt([
         {
             type: "input",
             name: "name",
-            message: "What is your name?"
-        },
-        {
-            type: "input",
-            name: "role",
-            message: "What is your role in the company?"
-        },
-        {
-            type: "input",
-            name: "What is your employee ID?",
-            message: "What are the installation requirements for this project?"
-        },
-        {
-            type: "input",
-            name: "github",
-            message: "Enter your github username"
+            message: "Please enter manager's name",
         },
         {
             type: "input",
             name: "email",
-            message: "Enter your email"
+            message: "Please enter manager's email",
         },
-    ]);
+        {
+            type: "input",
+            name: "id",
+            message: "Please enter manager ID",
+        },
+        //The following question is unique to managers only
+        {
+            type: "input",
+            name: "officeNumber",
+            message: "Please enter manager's office room number",
+        },
+    ])
+        // Creates a new manager based on the input
+        .then(answers => {
+            const manager = new Manager(answers.name, answers.id, answers.email, answers.officeNumber)
+            newTeam.push(manager)
+            return promptQuestion()
+        })
 }
 
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
+function promptEngineer() {
+    return inquirer.prompt([
+        {
+            type: "input",
+            name: "name",
+            message: "Please enter engineer name",
+        },
+        {
+            type: "input",
+            name: "email",
+            message: "Please enter engineer email",
+        },
+        {
+            type: "input",
+            name: "id",
+            message: "Please enter engineer ID",
 
-promptUser()
+        },
+        {
+            type: "input",
+            name: "github",
+            message: "Please enter engineer's github username",
+        },
+    ])
+        .then(answers => {
+            const engineer = new Engineer(answers.name, answers.id, answers.email, answers.github);
+            newTeam.push(engineer)
+            return prompQuestion()
+        })
+}
+function promptIntern() {
+    return inquirer.prompt([
+        {
+            type: "input",
+            name: "name",
+            message: "Please enter intern's name",
+        },
+        {
+            type: "input",
+            name: "email",
+            message: "Please enter intern's email",
+
+        },
+        {
+            type: "input",
+            name: "id",
+            message: "Please enter intern's ID",
+
+        },
+        {
+            type: "input",
+            name: "school",
+            message: "Please enter the school that intern has most recently attended",
+
+        },
+    ])
+        .then(answers => {
+            const intern = new Intern(answers.name, answers.id, answers.email, answers.school);
+            newTeam.push(intern)
+            return promptQuestion()
+        })
+}
+
+function writeFile()
     .then(function () {
-        //Call htmlRenderer function and passing the data
-        const render = htmlRenderer(data)
-        return writeFileAsync("index.html", render);
-    })
+    //Call htmlRenderer function and passing the data
+
+})
     .catch(function (err) {
         console.log(err);
     });
 
-
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
-
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
-
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
+function writeFile() {
+        .then(function () {
+        const render = htmlRenderer(data)
+        return writeFileAsync("output/team.html", render);
+    } catch (err) {
+    console.log(err);
+}
+}
