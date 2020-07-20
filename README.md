@@ -15,13 +15,17 @@ In this command line app, users generate team members by answering a set of ques
 
 ## Installation
 * Clone the repository. 
-* Install the inquirer dependencies.
+* Install the inquirer dependencies by using `npm i`
 
 ## License
 
 ![ISC license](https://img.shields.io/badge/License-ISC-blue.svg) 
 
----
+## Video Walkthrough
+
+
+<a href="https://drive.google.com/file/d/1gQeU3vYX75PqD1bM-FxzAkQ6oCRvE8G_/view?usp=sharing" target="_blank">Here is a video walkthrough of the application </a>
+
 ## Contributing
 Pull requests are welcome. If you want to contact me about this project, please visit my Github page or email me at (begumsacak@gmail.com).
 
