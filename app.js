@@ -4,6 +4,7 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
+const util = require("util");
 
 
 
@@ -11,6 +12,7 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+const writeFileAsync = util.promisify(fs.writeFile);
 
 //we will push to an empty array of new team as new members are dynamically created
 let newTeam = [];
@@ -23,7 +25,7 @@ function promptQuestion() {
             name: "teamMember",
             message: "Who do you want to add to the team?",
             choices: [
-                "Manager"
+                "Manager",
                 "Engineer",
                 "Intern",
                 "None"
@@ -39,7 +41,7 @@ function promptQuestion() {
         else if (answers.teamMember === "Intern") {
             return promptIntern()
         } else {
-            return
+            return 
         }
     })
 }
@@ -104,7 +106,7 @@ function promptEngineer() {
         .then(answers => {
             const engineer = new Engineer(answers.name, answers.id, answers.email, answers.github);
             newTeam.push(engineer)
-            return prompQuestion()
+            return promptQuestion()
         })
 }
 function promptIntern() {
@@ -140,20 +142,19 @@ function promptIntern() {
         })
 }
 
-function writeFile()
-    .then(function () {
-    //Call htmlRenderer function and passing the data
+promptQuestion()
+    .then(function (data) {
 
-})
+        const generateTeam = render(newTeam)
+        return writeFileAsync("output/team.html", generateTeam);
+
+
+    })
+    .then(function () {
+        console.log("Successfully created a team");
+    })
     .catch(function (err) {
         console.log(err);
     });
 
-function writeFile() {
-        .then(function () {
-        const render = htmlRenderer(data)
-        return writeFileAsync("output/team.html", render);
-    } catch (err) {
-    console.log(err);
-}
-}
+
